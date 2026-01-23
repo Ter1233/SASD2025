@@ -11,7 +11,7 @@ public class FeatureEnvy
 {
     public void TestAdd()
     {
-        var point = Point.Add(new Point(2, 3), new Point(4, 5));
+        var point = AddPoint(new Point(2, 3), new Point(4, 5));
     }
     public Point AddPoint(Point a, Point b)
     {
@@ -27,9 +27,5 @@ public class Point
     {
         X = x;
         Y = y;
-    }
-public static Point Add(Point a, Point b)
-    {
-        return new Point(a.X + b.X, a.Y + b.Y);
     }
 }

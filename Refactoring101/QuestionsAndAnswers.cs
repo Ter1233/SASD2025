@@ -3,61 +3,85 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Refactoring101
 {
-    // Do Refactoring the following code:
     public class QuestionsAndAnswers
     {
-        // 1. Mysterious Name
-        public double Calc(double a, double b)
+        public void Run()
         {
-            return a > b ? a : b;
+            double max = GetMax(10, 20);
+            Console.WriteLine($"Max = {max}");
+
+            PrintPeople();
+
+            var studentService = new StudentService();
+            studentService.DisplayStudentCount();
+
+            var date = new CustomDate(2024, 6, 15);
+            PrintDate(date);
         }
 
-        // 2. Duplicate Code
-        public void Print()
+        // 1. Mysterious Name → Rename
+        public double GetMax(double firstNumber, double secondNumber)
         {
-            Console.WriteLine("***********************");
-            Console.WriteLine("   Mr.Harry Potter");
-            Console.WriteLine("***********************");
-            Console.WriteLine();
+            return firstNumber > secondNumber ? firstNumber : secondNumber;
+        }
 
-            Console.WriteLine("***********************");
-            Console.WriteLine("   Ms.Mary Poppin");
-            Console.WriteLine("***********************");
-            Console.WriteLine();
+        // 2. Duplicate Code → Extract method already OK, improve naming
+        public void PrintPeople()
+        {
+            PrintNameWithBorder("Mr. Harry Potter");
+            PrintNameWithBorder("Ms. Mary Poppin");
+            PrintNameWithBorder("Mr. Johny Black");
+        }
 
-            Console.WriteLine("***********************");
-            Console.WriteLine("   Mr.Johny Black");
-            Console.WriteLine("***********************");
+        private void PrintNameWithBorder(string name)
+        {
+            const string border = "***********************";
+            Console.WriteLine(border);
+            Console.WriteLine($"   {name}");
+            Console.WriteLine(border);
             Console.WriteLine();
         }
 
-        // 3. Shotgun Surgery
-        public class Shotgun1
+        // 3. Shotgun Surgery → Centralize responsibility
+        public class StudentService
         {
-            public void DisplayStudents()
+            private const int StudentCount = 48;
+
+            public void DisplayStudentCount()
             {
-                Console.WriteLine("Student Count = " + 48);
+                Console.WriteLine($"Student Count = {StudentCount}");
+                Console.WriteLine($"Total Students : {StudentCount}");
             }
         }
-        public class Shotgun2
+
+        // 4 & 5. Data Clump + Feature Envy → Introduce Date class
+        public void PrintDate(CustomDate date)
         {
-            public void PrintTotal()
-            {
-                Console.WriteLine("Total Students : " + 48);
-            }
+            Console.WriteLine(date.Format());
+        }
+    }
+
+    // Feature Envy fixed here
+    public class CustomDate
+    {
+        public int Year { get; }
+        public int Month { get; }
+        public int Day { get; }
+
+        public CustomDate(int year, int month, int day)
+        {
+            Year = year;
+            Month = month;
+            Day = day;
         }
 
-        // 4. Data Clump
-        public void PrintDate(int day, int month, int year)
+        public string Format()
         {
-            Console.WriteLine($"{day:00}/{month:00}/{year:0000}");
+            return $"{Day:D2}/{Month:D2}/{Year:D4}";
         }
-        // 5. Feature Envy
-        //     จากข้อที่แล้ว น่าจะได้สร้างคลาส Date ขึ้นมา
-        //     ในคลาส Date นั้นให้สร้าง method: public string Format()
-        //      ปรับให้ PrintDate(...) ของเดิม ไปเรียก date.Format() ดังกล่าว
     }
 }
